@@ -1,41 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   first_file.c                                       :+:      :+:    :+:   */
+/*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:56:33 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/24 11:54:47 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/24 13:47:34 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// ---------------------------> mutual exceusion
-// usleep, 
-// gettimeofday, 
-// pthread_create, for create a new thread
-// pthread_detach,
-// pthread_join,// Wait for the thread to finish and get the result
-
-// pthread_mutex_init  ,
-// pthread_mutex_destroy,
-// pthread_mutex_lock,
-// pthread_mutex_unlock
-
-void    writees(t_philo *philo, int x)
-{
-    if (x == 0)
-        printf("id  %d has taken a fork\n", philo->id);
-    if (x == 1)
-        printf("%ld ms %d is eating\n",(get_time() - philo->time),philo->id);
-    if (x == 2)
-        printf("%ld ms %d  is sleeping\n",(get_time() - philo->time), philo->id); 
-    if (x == 3)
-        printf("%ld ms %d  is thinking\n",(get_time() - philo->time), philo->id);
-    if (x == 4)
-        printf("%ld ms %d  died\n",(get_time() - philo->time), philo->id);
+void fun_eat(t_philo *philo)
+{   
+    if (philo->id % 2 == 0)
+    {
+        pthread_mutex_lock(&philo->forks[philo->fork_left]);
+        writees(philo, 0);
+        pthread_mutex_lock(&philo->forks[philo->fork_right]);
+        writees(philo, 0);
+    }
+    else
+    {
+        pthread_mutex_lock(&philo->forks[philo->fork_right]);
+        writees(philo, 0);
+        pthread_mutex_lock(&philo->forks[philo->fork_left]);
+        writees(philo, 0);
+    }
+    writees(philo, 1);
+    while ((get_time() - philo->time) < philo->time_to_eat)
+        usleep(100);
+    philo->time = get_time();
+    func_sleep(philo);
+    writees(philo, 3);
+    pthread_mutex_unlock(&philo->forks[philo->fork_left]);
+    pthread_mutex_unlock(&philo->forks[philo->fork_right]);
 }
 
 void    *routine(void *av)
@@ -44,13 +44,13 @@ void    *routine(void *av)
 
     philo = (t_philo *)av;
     philo->fork_left = philo->id;
-    philo->fork_right = (philo->id + 1) % philo->number_of_philo;
+    philo->fork_right = (philo->id + 1) % philo->number_of_fork;
     if (philo->id % 2 != 0)
-        usleep(500);
+        usleep(100);
     fun_eat(philo);
     return (0);
 }
-void    take_fork(t_philo *philo)
+void    take_forks(t_philo *philo)
 {
     int i;
 
@@ -71,22 +71,20 @@ void    create_threads(t_philo *philo)
 {
     int i;
     t_philo *head = NULL;
+    t_philo *current;
     t_philo *new_node;
     
     i = 0;
-    printf("1\n");
     while (i < philo->number_of_philo)
     {
         new_node = ft_lstnew(philo, i);
-        printf("id --> %d\n", new_node->id);
         if (!new_node)
-            return ;
+        return ;
         ft_lstadd_back(&head, new_node);
         pthread_create(&new_node->threads, NULL, &routine, new_node);
         i++;
     }
-    exit(1);
-    t_philo *current = head;
+    current = head;
     while (current)
     {
         pthread_join(current->threads, NULL);
@@ -94,7 +92,7 @@ void    create_threads(t_philo *philo)
     }
     i = 0;
     while (i < philo->number_of_fork)
-        pthread_mutex_destroy(&philo->forks[i++]);
+    pthread_mutex_destroy(&philo->forks[i++]);
 }
 
 int main(int ac, char **av)
@@ -103,6 +101,6 @@ int main(int ac, char **av)
     
     check_av(av , ac);
     times(&philo, av);
-    take_fork(&philo);
+    take_forks(&philo);
     create_threads(&philo);
 }

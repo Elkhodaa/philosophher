@@ -6,7 +6,7 @@
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:54:53 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/24 11:32:48 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/24 13:35:40 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@ t_philo	*ft_lstnew(t_philo *philo, int i)
 
     new = malloc(sizeof(t_philo));
     if (!new)
-        return (NULL);
+		return (NULL);
+	new = philo;
     new->id = i;
     new->fork_left = i;
-    new->fork_right = (i + 1) % philo->number_of_philo;
+    new->fork_right = (i + 1) % philo->number_of_fork;
     new->next = NULL;
     return (new);
 }

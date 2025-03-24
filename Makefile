@@ -6,10 +6,10 @@ HEADER = philo.h
 
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g 
 
-SRC = first_file.c \
+SRC = philo.c \
 	parssing.c \
-	activities.c \
-	utilis_1.c
+	utilis_1.c \
+	utilis_2.c
 	
 OBJ = $(SRC:.c=.o)
 

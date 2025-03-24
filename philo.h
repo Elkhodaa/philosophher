@@ -6,7 +6,7 @@
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:53:40 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/24 11:22:39 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/24 12:29:59 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,6 @@ long get_time();
 void    times(t_philo *philo, char **av);
 void    func_sleep(t_philo *philo);
 void   fun_eat(t_philo *philo);
-
+void    take_fork(t_philo *philo);
 
 #endif
