@@ -6,49 +6,48 @@
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:43:37 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/24 13:45:22 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:01:23 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long  get_time()
-{
-    struct timeval time;
-    
-    gettimeofday(&time, NULL);
-    return (time.tv_sec * 1000 + time.tv_usec / 1000);
-}
-
-void    times(t_philo *philo, char **av)
-{
-    philo->number_of_philo = ft_atoi(av[1]);
-    philo->time_to_die = ft_atoi(av[2]);
-    philo->time_to_eat = ft_atoi(av[3]);
-    philo->time_to_sleep = ft_atoi(av[4]);
-    philo->time = get_time();
-    philo->number_of_fork = philo->number_of_philo;
-}
 void    writees(t_philo *philo, int x)
 {
+    long current_time;
+
+    current_time = get_time() - philo->time;
     if (x == 0)
-        printf("id  %d has taken a fork\n", philo->id);
+        printf("%ld ms id  %d has taken a fork\n",current_time ,philo->id);
     if (x == 1)
-        printf("%ld ms %d is eating\n",(get_time() - philo->time),philo->id);
+        printf("%ld ms id %d is eating\n",current_time ,philo->id);
     if (x == 2)
-        printf("%ld ms %d  is sleeping\n",(get_time() - philo->time), philo->id); 
+        printf("%ld ms id %d  is sleeping\n",current_time, philo->id); 
     if (x == 3)
-        printf("%ld ms %d  is thinking\n",(get_time() - philo->time), philo->id);
+        printf("%ld ms id %d  is thinking\n",current_time, philo->id);
     if (x == 4)
-        printf("%ld ms %d  died\n",(get_time() - philo->time), philo->id);
+        printf("%ld ms id %d  died\n",current_time, philo->id);
 }
 
-void    func_sleep(t_philo *philo)
-{
-    while((get_time() - philo->time) < philo->time_to_sleep)
-        usleep(500);
-    writees(philo, 2);
-    philo->time = get_time();
+void fun_eat(t_philo *philo)
+{   
+    if (philo->id % 2 == 0)
+    {
+        pthread_mutex_lock(&philo->forks[philo->fork_left]);
+        writees(philo, 0);
+        pthread_mutex_lock(&philo->forks[philo->fork_right]);
+        writees(philo, 0);
+    }
+    else
+    {
+        pthread_mutex_lock(&philo->forks[philo->fork_right]);
+        writees(philo, 0);
+        pthread_mutex_lock(&philo->forks[philo->fork_left]);
+        writees(philo, 0);
+    }
+    // philo->last_meal = get_time();
+    time_to_eat(philo);
+    pthread_mutex_unlock(&philo->forks[philo->fork_left]);
+    pthread_mutex_unlock(&philo->forks[philo->fork_right]);
+    time_to_sleep(philo);
 }
-
-

@@ -6,51 +6,24 @@
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:56:33 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/24 13:47:34 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:26:45 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void fun_eat(t_philo *philo)
-{   
-    if (philo->id % 2 == 0)
-    {
-        pthread_mutex_lock(&philo->forks[philo->fork_left]);
-        writees(philo, 0);
-        pthread_mutex_lock(&philo->forks[philo->fork_right]);
-        writees(philo, 0);
-    }
-    else
-    {
-        pthread_mutex_lock(&philo->forks[philo->fork_right]);
-        writees(philo, 0);
-        pthread_mutex_lock(&philo->forks[philo->fork_left]);
-        writees(philo, 0);
-    }
-    writees(philo, 1);
-    while ((get_time() - philo->time) < philo->time_to_eat)
-        usleep(100);
-    philo->time = get_time();
-    func_sleep(philo);
-    writees(philo, 3);
-    pthread_mutex_unlock(&philo->forks[philo->fork_left]);
-    pthread_mutex_unlock(&philo->forks[philo->fork_right]);
-}
 
 void    *routine(void *av)
 {
     t_philo *philo;
 
     philo = (t_philo *)av;
-    philo->fork_left = philo->id;
-    philo->fork_right = (philo->id + 1) % philo->number_of_fork;
-    if (philo->id % 2 != 0)
-        usleep(100);
+    if (philo->number_of_philo % 2 != 0)
+        usleep(500);
     fun_eat(philo);
     return (0);
 }
-void    take_forks(t_philo *philo)
+
+void    mutex_forks(t_philo *philo)
 {
     int i;
 
@@ -62,8 +35,23 @@ void    take_forks(t_philo *philo)
     while (i < philo->number_of_fork) 
     {
         if (pthread_mutex_init(&philo->forks[i], NULL) != 0) 
-        return ;
+            return ;
         i++;
+    }
+    i = 0;
+    while (i < philo->number_of_fork)
+        pthread_mutex_destroy(&philo->forks[i++]);
+}
+
+void    join_thread(t_philo *head)
+{
+    t_philo *current;
+    current = head;
+    while (current)
+    {
+        if (pthread_join(current->threads, NULL) != 0)
+            return ;
+        current = current->next;
     }
 }
 
@@ -71,7 +59,6 @@ void    create_threads(t_philo *philo)
 {
     int i;
     t_philo *head = NULL;
-    t_philo *current;
     t_philo *new_node;
     
     i = 0;
@@ -79,20 +66,12 @@ void    create_threads(t_philo *philo)
     {
         new_node = ft_lstnew(philo, i);
         if (!new_node)
-        return ;
+            return ;
         ft_lstadd_back(&head, new_node);
-        pthread_create(&new_node->threads, NULL, &routine, new_node);
+        pthread_create(&new_node->threads, NULL, routine, new_node);
         i++;
     }
-    current = head;
-    while (current)
-    {
-        pthread_join(current->threads, NULL);
-        current = current->next;
-    }
-    i = 0;
-    while (i < philo->number_of_fork)
-    pthread_mutex_destroy(&philo->forks[i++]);
+    join_thread(head);
 }
 
 int main(int ac, char **av)
@@ -101,6 +80,6 @@ int main(int ac, char **av)
     
     check_av(av , ac);
     times(&philo, av);
-    take_forks(&philo);
+    mutex_forks(&philo);
     create_threads(&philo);
 }

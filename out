@@ -1,0 +1,20 @@
+0 ms id  0 has taken a fork
+0 ms id  0 has taken a fork
+0 ms id 0 is eating
+0 ms id  1 has taken a fork
+0 ms id  1 has taken a fork
+0 ms id 1 is eating
+0 ms id  3 has taken a fork
+0 ms id  3 has taken a fork
+0 ms id 3 is eating
+0 ms id  2 has taken a fork
+0 ms id  2 has taken a fork
+0 ms id 2 is eating
+100 ms id 0  is sleeping
+100 ms id 2  is sleeping
+100 ms id 2  is thinking
+100 ms id 0  is thinking
+100 ms id 1  is sleeping
+100 ms id 3  is sleeping
+100 ms id 1  is thinking
+100 ms id 3  is thinking

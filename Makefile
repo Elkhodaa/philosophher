@@ -4,12 +4,13 @@ CC = cc
 
 HEADER = philo.h
 
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g 
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=address -g 
 
 SRC = philo.c \
 	parssing.c \
 	utilis_1.c \
-	utilis_2.c
+	utilis_2.c \
+	utilis_3.c \
 	
 OBJ = $(SRC:.c=.o)
 
