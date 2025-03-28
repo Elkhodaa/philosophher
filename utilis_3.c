@@ -6,11 +6,23 @@
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 12:00:14 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/28 15:27:36 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/28 16:29:17 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+
+void ft_sleepms(long time)
+{
+    long	curr;
+	long	end;
+
+	curr = get_time();
+	end = curr + time;
+	while (get_time() < end)
+		usleep(100);
+}
 
 long  get_time()
 {
@@ -30,21 +42,14 @@ void    times(t_philo *philo, char **av)
             || philo->time_to_sleep <= 0) 
        ft_putstr_fd("Error in The time \n", 2);
     philo->number_of_fork = philo->number_of_philo;
-    philo->update_time = get_time();
+    philo->fixed_time = get_time();
 }
 
 void    time_to_sleep(t_philo *philo)
 {
     writees(philo, 2);
-    // philo->update_time = get_time();
-    // while(get_time() - philo->update_time < philo->time_to_sleep)
-    //      usleep(100);
-    usleep(philo->time_to_sleep * 1000);
+    philo->fixed_time = get_time();
+    ft_sleepms(philo->time_to_sleep);
     writees(philo, 3);
 }
-void    time_to_eat(t_philo *philo)
-{
-    writees(philo, 1);
-    while ((get_time() - philo->update_time) < philo->time_to_eat)
-        usleep(100);
-}
+

@@ -6,25 +6,17 @@
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:56:33 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/28 15:52:22 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/28 16:34:18 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
-// A race condition occurs when multiple threads/processes access shared data simultaneously
-// for handle this problem we use mutex
-
-
-// Deadlock --> Circular Wait Mutual Exclusion: Only one thread can hold a resource at a time.
 void    *routine(void *av)
 {
     t_philo *philo;
 
     philo = (t_philo *)av;
-    if (philo->id % 2 != 0)
-        usleep(100);
     while (1)
     {
         fun_eat(philo);
@@ -48,7 +40,6 @@ void    mutex_forks(t_philo *philo)
             return ;
         i++;
     }
-    
 }
 
 void    join_thread(t_philo *head)
@@ -78,7 +69,6 @@ void    create_threads(t_philo *philo)
         if (!new_node)
             return ;
         ft_lstadd_back(&head, new_node);
-        // pthread_detach(new_node->threads);
         i++;
     }
     current = head;
