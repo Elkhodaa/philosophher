@@ -6,7 +6,7 @@
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:53:40 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/26 12:52:14 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/28 15:50:56 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 typedef struct philo
 {
     int     id;
-    long    time;
     int     number_of_philo;
     int     number_of_fork;
     int     fork_left;
@@ -34,10 +33,12 @@ typedef struct philo
     int     time_to_die;
     int     time_to_sleep;
     int     time_to_think;
-    long    last_meal;
-    pthread_mutex_t meal_lock; 
-    pthread_t threads;
+    int     meal;
+    int     die;
+    long    update_time;
+    pthread_t thread;
     pthread_mutex_t *forks;
+    pthread_mutex_t time;
     struct philo *next;
 }t_philo;
 
@@ -55,6 +56,7 @@ long get_time();
 void    times(t_philo *philo, char **av);
 void    time_to_sleep(t_philo *philo);
 void    time_to_eat(t_philo *philo);
+void    time_to_die(t_philo *philo);
 void   fun_eat(t_philo *philo);
 void    mutex_forks(t_philo *philo);
 

@@ -6,7 +6,7 @@
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:57:33 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/23 15:10:20 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:03:30 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,9 @@ void	check_empty(char **str)
 		j++;
 	}
 }
+
 void	check_sgin(char **str, int j, int i)
 {
-	if (str[j][i] == '-')
-		ft_putstr_fd("Error in sign\n", 2);
 	if (!(str[j][i + 1] >= '0' && str[j][i + 1] <= '9'))
 		ft_putstr_fd("Error in sign\n", 2);
 	if (i > 0 && str[j][i - 1] != ' ')
@@ -76,7 +75,7 @@ long	ft_atoi(char *str)
 	return (res * s);
 }
 
-void    check_av(char **av, int ac)
+void    check_av(char **str, int ac)
 {
     int i;
     int j;
@@ -84,19 +83,19 @@ void    check_av(char **av, int ac)
 	j = 1;
 	if (ac == 5)
 	{
-		check_empty(av);
-		while (av[++j])
+		check_empty(str);
+		while (str[++j])
 		{
 			i = 0;
-			while (av[j][++i])
+			while (str[j][++i])
 			{
-				if (av[j][i] < '0' || av[j][i] > '9')
+				if (str[j][i] < '0' || str[j][i] > '9')
 				{
-					if (av[j][i] != 32 && av[j][i] != '+' && av[j][i] != '-' )
+					if (str[j][i] != 32 && str[j][i] != '+' && str[j][i] != '-' )
 						ft_putstr_fd("It's not a number\n", 2);
 				}
-				if (av[j][i] == '-' || av[j][i] == '+')
-					check_sgin(av, j, i);
+				if (str[j][i] == '-' || str[j][i] == '+')
+					check_sgin(str, j, i);
 			}
 		}
 	}

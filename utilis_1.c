@@ -6,7 +6,7 @@
 /*   By: wikhamli <wikhamli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 10:54:53 by wikhamli          #+#    #+#             */
-/*   Updated: 2025/03/26 12:46:44 by wikhamli         ###   ########.fr       */
+/*   Updated: 2025/03/28 15:52:03 by wikhamli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,19 @@
 t_philo	*ft_lstnew(t_philo *philo, int i)
 {
 	t_philo *new;
+	
 
     new = malloc(sizeof(t_philo));
     if (!new)
 		return (NULL);
-	new->id = i;
-	new->fork_left = i;
-	new->time = philo->time;
+	new->id = i + 1;
+	new->update_time = philo->update_time;
+	new->die = get_time();
 	new->forks = philo->forks;
 	new->number_of_fork = philo->number_of_fork;
+	new->fork_left = i;
 	new->fork_right = (i + 1) % philo->number_of_fork;
-	new->number_of_philo = philo->number_of_philo;
-	new->time_to_eat = philo->time_to_eat;
-	new->time_to_sleep = philo->time_to_sleep;
-	new->time_to_die = philo->time_to_die;
-	new->time_to_think = philo->time_to_think;
+	new->thread = 0;
 	new->next = NULL;
     return (new);
 }
